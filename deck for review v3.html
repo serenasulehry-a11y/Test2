@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redesigned: FP&A Products - Enduring Planet</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons for modern iconography -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom styles to complement Tailwind */
+        
+        /* Defining the updated color palette for easy use */
+        :root {
+            --ep-navy: #0D244E;
+            --ep-teal: #00A99D;
+            --ep-light-teal: #E0F2F1;
+            --ep-accent: #FFC107;
+            --text-primary: #4A5568; /* Updated primary text to a softer navy-gray */
+            --text-secondary: #6B7280; /* Updated secondary text to a lighter gray */
+            --border-color: #e2e8f0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: var(--text-primary); /* Set default text color */
+        }
+
+        /* Section container styles for a flowing layout */
+        .section {
+            width: 100%;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .section {
+                padding: 6rem 2rem;
+            }
+        }
+        
+        /* Special section styling for cover page */
+        #cover {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Special section styling for full-width, complex layouts */
+        .section.full-width-content {
+            padding: 0;
+        }
+
+        .section-content {
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            z-index: 10;
+        }
+        
+        .section-content.full-width {
+            max-width: 100%;
+            height: 100%;
+        }
+
+        /* Styling for section titles */
+        .section-title {
+            font-size: 2.25rem; /* Standardized size for all titles */
+            font-weight: 800;
+            color: var(--ep-navy); /* Keep headings dark navy for contrast */
+            line-height: 1.2;
+        }
+
+        /* Styling for section subtitles */
+        .section-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 48rem;
+            margin-top: 1rem;
+        }
+        @media (min-width: 768px) {
+            .section-subtitle {
+                font-size: 1.125rem;
+            }
+        }
+
+        /* Custom card styling for a modern look */
+        .custom-card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .custom-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Styling for icons */
+        .icon-wrapper {
+            background-color: var(--ep-light-teal);
+            color: var(--ep-teal);
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Process timeline styling */
+        .process-dot {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+            border: 3px solid var(--ep-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--ep-navy);
+            font-size: 1.25rem;
+            z-index: 1;
+        }
+        
+        /* Decorative background shapes for visual interest */
+        .shape {
+            position: absolute;
+            z-index: 1;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        .shape-1 {
+            width: 200px;
+            height: 200px;
+            background: var(--ep-teal);
+            border-radius: 50%;
+            top: 10%;
+            left: 5%;
+        }
+        .shape-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--ep-navy);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            bottom: 15%;
+            right: 8%;
+            transform: rotate(-15deg);
+        }
+
+        /* Responsive Pricing Table Styles */
+        @media screen and (max-width: 767px) {
+            #pricing-table thead {
+                display: none;
+            }
+            #pricing-table tbody, #pricing-table tr, #pricing-table td {
+                display: block;
+                width: 100% !important;
+            }
+            #pricing-table tr {
+                margin-bottom: 1rem;
+            }
+            #pricing-table td {
+                text-align: right !important;
+                padding-left: 50% !important;
+                position: relative;
+            }
+            #pricing-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 50%;
+                padding-left: 1.5rem;
+                font-weight: 600;
+                text-align: left;
+                color: var(--ep-navy);
+            }
+             #pricing-table td:first-child {
+                padding-top: 1.5rem;
+            }
+            #pricing-table td:last-child {
+                padding-bottom: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Section 1: Cover -->
+<section id="cover" class="section bg-white">
+    <div class="section-content text-center">
+        <div class="mb-4">
+            <img src="https://enduringplanet.com/_next/static/images/logo-b1431b87aad010f8a474bf5a54a49e5c.svg" alt="Enduring Planet Logo" class="mx-auto h-16 w-auto">
+        </div>
+        <h1 class="text-4xl md:text-6xl font-black mb-4" style="color: var(--ep-navy);">FP&A Products & Services</h1>
+        <p class="text-xl md:text-2xl mb-10" style="color: var(--text-secondary);">FP&A Support for Climate SMBs and Startups</p>
+    </div>
+</section>
+
+<!-- Section 2: Overview -->
+<section id="overview" class="section bg-[#f0f2f5]">
+    <div class="section-content text-center">
+        <h2 class="section-title mb-4">Our FP&A Offerings</h2>
+        <p class="section-subtitle mb-12 mx-auto">A suite of products designed to bring clarity, strategy, and investor-readiness to your financial operations.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="custom-card text-left"><div class="icon-wrapper"><i data-lucide="file-spreadsheet"></i></div><h3 class="text-xl font-bold mb-2" style="color: var(--ep-navy);">Pro Forma</h3><p style="color: var(--text-secondary);">A fully customized, comprehensive and live financial model, designed for extended planning and analysis.</p></div>
+            <div class="custom-card text-left"><div class="icon-wrapper"><i data-lucide="layout-dashboard"></i></div><h3 class="text-xl font-bold mb-2" style="color: var(--ep-navy);">Basic Dashboard</h3><p style="color: var(--text-secondary);">A streamlined, dynamic dashboard providing key financial indicators for a quick snapshot of financial health.</p></div>
+            <div class="custom-card text-left"><div class="icon-wrapper"><i data-lucide="bar-chart-3"></i></div><h3 class="text-xl font-bold mb-2" style="color: var(--ep-navy);">Enhanced Dashboard</h3><p style="color: var(--text-secondary);">A comprehensive, data-driven dashboard with advanced tools for deeper financial insights.</p></div>
+            <div class="custom-card text-left"><div class="icon-wrapper"><i data-lucide="dollar-sign"></i></div><h3 class="text-xl font-bold mb-2" style="color: var(--ep-navy);">Cash Strategy Budget</h3><p style="color: var(--text-secondary);">An intuitive tool to manage liquidity and optimize cash deployment, built for flexibility and collaboration.</p></div>
+            <div class="custom-card text-left"><div class="icon-wrapper"><i data-lucide="gem"></i></div><h3 class="text-xl font-bold mb-2" style="color: var(--ep-navy);">Valuation Model</h3><p style="color: var(--text-secondary);">In-depth analysis to determine your company's valuation for fundraising and strategic planning.</p></div>
+            <div class="custom-card text-left"><div class="icon-wrapper"><i data-lucide="shield-check"></i></div><h3 class="text-xl font-bold mb-2" style="color: var(--ep-navy);">Model Audit</h3><p style="color: var(--text-secondary);">A thorough review and stress-test of your existing financial models to ensure accuracy and investor-readiness.</p></div>
+            <div class="custom-card text-left"><div class="icon-wrapper"><i data-lucide="file-cog"></i></div><h3 class="text-xl font-bold mb-2" style="color: var(--ep-navy);">One-Time Model Builds</h3><p style="color: var(--text-secondary);">A complete financial model delivered as a one-time project, scoped to your specific needs.</p></div>
+            <div class="custom-card text-left"><div class="icon-wrapper"><i data-lucide="clock"></i></div><h3 class="text-xl font-bold mb-2" style="color: var(--ep-navy);">Retainer Services</h3><p style="color: var(--text-secondary);">Ongoing, flexible FP&A support on an hourly basis to assist with your evolving financial needs.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 3: Pro Forma Intro -->
+<section id="pro-forma-intro" class="section bg-[var(--ep-navy)] text-white flex items-center justify-center min-h-[70vh]">
+    <div class="shape shape-1"></div>
+    <div class="section-content text-center">
+        <i data-lucide="file-spreadsheet" class="w-24 h-24 mx-auto mb-6 text-[var(--ep-teal)]"></i>
+        <h1 class="text-6xl md:text-8xl font-black mb-4">Pro Forma</h1>
+        <p class="text-xl md:text-2xl opacity-80">Forecast with Actionable Insights to Support Your Growth</p>
+    </div>
+</section>
+
+<!-- Section 4: Pro Forma Components -->
+<section id="pro-forma-components" class="section bg-gradient-to-b from-white to-[var(--ep-light-teal)]">
+    <div class="section-content">
+        <div class="text-center mb-16">
+            <h2 class="section-title">Key Components</h2>
+        </div>
+        <div class="flex flex-col md:flex-row justify-center md:items-stretch gap-4 lg:gap-6 max-w-6xl mx-auto">
+            
+            <!-- Item 1: Assumptions Sheet -->
+            <div class="custom-card w-full md:w-1/5 text-center md:mt-24">
+                <div class="icon-wrapper mx-auto"><i data-lucide="sliders-horizontal"></i></div>
+                <h4 class="text-lg font-bold text-[var(--ep-navy)]">Assumptions Sheet</h4>
+                <p class="text-sm text-[var(--text-secondary)] mt-2">Drivers-based modeling for revenue, COGS, and all key assumptions.</p>
+            </div>
+
+            <!-- Item 2: Executive Summary -->
+            <div class="custom-card w-full md:w-1/5 text-center md:mt-8">
+                <div class="icon-wrapper mx-auto"><i data-lucide="pie-chart"></i></div>
+                <h4 class="text-lg font-bold text-[var(--ep-navy)]">Executive Summary</h4>
+                <p class="text-sm text-[var(--text-secondary)] mt-2">Dynamic scenario builder with visualizations for cash, revenue, and more.</p>
+            </div>
+
+            <!-- Item 3: Financial Statements (Central) -->
+            <div class="custom-card w-full md:w-1/4 text-center border-t-4 border-[var(--ep-teal)]">
+                <div class="icon-wrapper mx-auto"><i data-lucide="book-open"></i></div>
+                <h4 class="text-xl font-bold text-[var(--ep-navy)]">Financial Statements</h4>
+                <p class="text-sm text-[var(--text-secondary)] mt-2">Fully-integrated statements, always up-to-date with your accounting.</p>
+            </div>
+
+            <!-- Item 4: Customizations -->
+            <div class="custom-card w-full md:w-1/5 text-center md:mt-8">
+                <div class="icon-wrapper mx-auto"><i data-lucide="puzzle"></i></div>
+                <h4 class="text-lg font-bold text-[var(--ep-navy)]">Customizations</h4>
+                <p class="text-sm text-[var(--text-secondary)] mt-2">Custom sheets for LTV/CAC, Cap Table, Project Financing, and more.</p>
+            </div>
+
+            <!-- Item 5: Valuation Add-On -->
+            <div class="custom-card w-full md:w-1/5 text-center md:mt-24">
+                <div class="icon-wrapper mx-auto"><i data-lucide="gem"></i></div>
+                <h4 class="text-lg font-bold text-[var(--ep-navy)]">Valuation Add-On</h4>
+                <p class="text-sm text-[var(--text-secondary)] mt-2">In-depth valuation analysis to support fundraising and strategy.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Section: Pro Forma Key Features 1 -->
+<section id="pro-forma-key-features-1" class="section bg-[#f0f2f5]">
+    <div class="section-content">
+        <div class="text-center mb-16">
+            <h2 class="section-title">Key Features: Executive Summary</h2>
+        </div>
+        <div class="space-y-12">
+            <!-- Feature 1 -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+                <div class="text-left md:col-span-5">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-wrapper flex-shrink-0 w-12 h-12 !mb-0"><i data-lucide="git-branch-plus" class="w-6 h-6"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg text-[var(--ep-navy)]">Scenario Builder</h4>
+                            <p class="text-[var(--text-secondary)] mt-1">Visualize and compare different financial outcomes (Bear, Base, Bull) to make informed strategic decisions and prepare for a range of future possibilities.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-2 border border-gray-200 shadow-sm md:col-span-7">
+                    <img src="https://i.postimg.cc/d371r2QM/Screenshot-2025-09-17-023624.png" alt="Scenario Builder" class="w-full">
+                </div>
+            </div>
+            <!-- Feature 2 -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+                <div class="bg-white p-2 border border-gray-200 shadow-sm md:col-span-7 md:order-last">
+                    <img src="https://i.postimg.cc/43NhnhcG/Screenshot-2025-09-17-024502.png" alt="Short Run Forecast" class="w-full">
+                </div>
+                <div class="text-left md:col-span-5">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-wrapper flex-shrink-0 w-12 h-12 !mb-0"><i data-lucide="calendar-days" class="w-6 h-6"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg text-[var(--ep-navy)]">The Short Run (Next Twelve Months)</h4>
+                            <p class="text-[var(--text-secondary)] mt-1">Get a detailed, month-by-month forecast for the next year, providing a clear view of your projected revenue, profitability, and cash flow to guide your immediate operational strategy.</p></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Feature 3 -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+                <div class="text-left md:col-span-5">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-wrapper flex-shrink-0 w-12 h-12 !mb-0"><i data-lucide="line-chart" class="w-6 h-6"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg text-[var(--ep-navy)]">Key Financial Indicators</h4>
+                            <p class="text-[var(--text-secondary)] mt-1">Track high-level yearly financial graphs with an interactive dropdown, allowing you to select different end years to dynamically visualize your long-term performance and strategic goals.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-2 border border-gray-200 shadow-sm md:col-span-7">
+                    <img src="https://i.postimg.cc/9Fbm0gY4/Screenshot-2025-09-17-025032.png" alt="Key Financial Indicators" class="w-full">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section: Pro Forma Key Features 2 -->
+<section id="pro-forma-key-features-2" class="section bg-white">
+    <div class="section-content">
+        <div class="text-center mb-16">
+            <h2 class="section-title">Key Features: Detailed Financial Statements</h2>
+            <p class="section-subtitle mx-auto">Get a complete picture of your financial health with fully-integrated financial statements.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center flex flex-col">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <div class="bg-[var(--ep-light-teal)] text-[var(--ep-teal)] rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="trending-up" class="w-4 h-4"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-[var(--ep-navy)]">Income Statement</h4>
+                </div>
+                <div class="bg-white p-2 border border-gray-200 shadow-sm flex-grow flex items-center justify-center">
+                    <img src="https://i.postimg.cc/DyRTSVbw/Screenshot-2025-09-17-030636.png" alt="Income Statement" class="w-full h-auto">
+                </div>
+            </div>
+            <div class="text-center flex flex-col">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <div class="bg-[var(--ep-light-teal)] text-[var(--ep-teal)] rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="landmark" class="w-4 h-4"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-[var(--ep-navy)]">Balance Sheet</h4>
+                </div>
+                <div class="bg-white p-2 border border-gray-200 shadow-sm flex-grow flex items-center justify-center">
+                    <img src="https://i.postimg.cc/VLgtwRSg/Screenshot-2025-09-17-025934.png" alt="Balance Sheet" class="w-full h-auto">
+                </div>
+            </div>
+            <div class="text-center flex flex-col">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <div class="bg-[var(--ep-light-teal)] text-[var(--ep-teal)] rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="arrow-left-right" class="w-4 h-4"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-[var(--ep-navy)]">Cash Flow Statement</h4>
+                </div>
+                <div class="bg-white p-2 border border-gray-200 shadow-sm flex-grow flex items-center justify-center">
+                    <img src="https://i.postimg.cc/0yHJMy0J/Screenshot-2025-09-17-030008.png" alt="Cash Flow Statement" class="w-full h-auto">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Section 5: Pro Forma Process -->
+<section id="pro-forma-process" class="section bg-[#f0f2f5]">
+    <div class="section-content">
+        <div class="text-center mb-16">
+            <h2 class="section-title">Our Collaborative Process</h2>
+            <p class="section-subtitle mx-auto">A structured, transparent journey from onboarding to a finalized, powerful financial model.</p>
+        </div>
+        <div class="relative w-full max-w-4xl mx-auto">
+            <div class="border-l-4 border-dashed border-[var(--ep-teal)] absolute h-full top-0 left-6"></div>
+            <div class="space-y-12">
+                <div class="flex gap-6 items-center"><div class="bg-[var(--ep-teal)] text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl z-10 flex-shrink-0">1</div><div class="bg-white p-6 rounded-lg shadow-md flex-grow"><h5 class="font-bold text-lg text-[var(--ep-navy)] mb-1">Submit Onboarding Documents</h5><p class="text-[var(--text-secondary)]"><strong class="text-[var(--ep-navy)]">Your part:</strong> Submit FP&A Onboarding Documents. <em class="text-[var(--ep-teal)]">(Timeline: 1-2 weeks)</em></p></div></div>
+                <div class="flex gap-6 items-center"><div class="bg-[var(--ep-teal)] text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl z-10 flex-shrink-0">2</div><div class="bg-white p-6 rounded-lg shadow-md flex-grow"><h5 class="font-bold text-lg text-[var(--ep-navy)] mb-1">Onboarding Call</h5><p class="text-[var(--text-secondary)]"><strong class="text-[var(--ep-navy)]">Our part:</strong> We'll review your documents and hold a call to dive deeper.</p></div></div>
+                <div class="flex gap-6 items-center"><div class="bg-[var(--ep-teal)] text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl z-10 flex-shrink-0">3</div><div class="bg-white p-6 rounded-lg shadow-md flex-grow"><h5 class="font-bold text-lg text-[var(--ep-navy)] mb-1">First Draft Delivery</h5><p class="text-[var(--text-secondary)]"><strong class="text-[var(--ep-navy)]">Our part:</strong> We deliver the first draft with a full model walkthrough. <em class="text-[var(--ep-teal)]">(Timeline: est. 4-5 weeks)</em></p></div></div>
+                <div class="flex gap-6 items-center"><div class="bg-[var(--ep-teal)] text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl z-10 flex-shrink-0">4</div><div class="bg-white p-6 rounded-lg shadow-md flex-grow"><h5 class="font-bold text-lg text-[var(--ep-navy)] mb-1">First Round of Revisions</h5><p class="text-[var(--text-secondary)]"><strong class="text-[var(--ep-navy)]">Your part:</strong> Request changes (up to 10 hours). <em class="text-[var(--ep-teal)]">(Timeline: 1-2 weeks)</em></p></div></div>
+                <div class="flex gap-6 items-center"><div class="bg-[var(--ep-teal)] text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl z-10 flex-shrink-0">5</div><div class="bg-white p-6 rounded-lg shadow-md flex-grow"><h5 class="font-bold text-lg text-[var(--ep-navy)] mb-1">Second Round of Revisions</h5><p class="text-[var(--text-secondary)]"><strong class="text-[var(--ep-navy)]">Your part:</strong> Request final changes (another 10 hours). <em class="text-[var(--ep-teal)]">(Timeline: 1-2 weeks)</em></p></div></div>
+            </div>
+        </div>
+        <p class="text-center text-sm text-gray-500 italic mt-12 max-w-3xl mx-auto">Significant changes after the two revision rounds or outside the contract scope will be billed at an hourly rate, ensuring fairness and transparency.</p>
+    </div>
+</section>
+
+<!-- Section 6: Dashboards Intro -->
+<section id="dashboards-intro" class="section bg-[var(--ep-navy)] text-white flex items-center justify-center min-h-[70vh]">
+    <div class="shape shape-2"></div>
+    <div class="section-content text-center">
+        <i data-lucide="layout-dashboard" class="w-24 h-24 mx-auto mb-6 text-[var(--ep-teal)]"></i>
+        <h1 class="text-6xl md:text-8xl font-black mb-4">Dashboards</h1>
+        <p class="text-xl md:text-2xl opacity-80">Your financial story, told through data</p>
+    </div>
+</section>
+
+<!-- Section 7: Dashboard Tiers -->
+<section id="dashboard-tiers" class="section bg-white">
+    <div class="section-content">
+        <div class="text-center mb-12">
+            <h2 class="section-title">Dashboards</h2>
+            <p class="section-subtitle mx-auto">Choose the level of insight that fits your needs, from a quick health check to comprehensive performance analysis.</p>
+        </div>
+        <div class="max-w-4xl mx-auto">
+            <div class="custom-card">
+                <h3 class="text-2xl font-bold text-[var(--ep-navy)] mb-2">Basic Dashboard</h3>
+                <p class="text-[var(--text-secondary)] mb-6">The essential monthly snapshot of your company's financial health.</p>
+                <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-primary">
+                    <li class="flex items-start gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-green-500 mt-1 flex-shrink-0"></i><strong class="text-[var(--text-primary)]">Profitability Trend Analysis</strong></li>
+                    <li class="flex items-start gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-green-500 mt-1 flex-shrink-0"></i><strong class="text-[var(--text-primary)]">Top 10 Monthly Expenses</strong></li>
+                    <li class="flex items-start gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-green-500 mt-1 flex-shrink-0"></i><strong class="text-[var(--text-primary)]">Historical Net Burn Analysis</strong></li>
+                    <li class="flex items-start gap-3"><i data-lucide="check-circle" class="w-5 h-5 text-green-500 mt-1 flex-shrink-0"></i><strong class="text-[var(--text-primary)]">Bank Balance Trends</strong></li>
+                </ul>
+            </div>
+
+            <div class="text-center my-4">
+                <i data-lucide="plus" class="w-10 h-10 mx-auto bg-gray-200 text-gray-500 rounded-full p-2"></i>
+            </div>
+
+            <div class="custom-card bg-gradient-to-br from-[var(--ep-light-teal)] to-white border-t-4 border-[var(--ep-teal)]">
+                <h3 class="text-2xl font-bold text-[var(--ep-navy)] mb-2">Enhanced Dashboard</h3>
+                <p class="text-[var(--text-secondary)] mb-6">Everything in the Basic Dashboard, plus advanced analytics for strategic decision-making.</p>
+                 <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-primary">
+                    <li class="flex items-start gap-3"><i data-lucide="arrow-right-circle" class="w-5 h-5 text-[var(--ep-teal)] mt-1 flex-shrink-0"></i><span class="text-[var(--text-secondary)]"><strong class="text-[var(--text-primary)]">Variance Analysis:</strong> Actuals vs. Pro Forma projections.</span></li>
+                    <li class="flex items-start gap-3"><i data-lucide="arrow-right-circle" class="w-5 h-5 text-[var(--ep-teal)] mt-1 flex-shrink-0"></i><span class="text-[var(--text-secondary)]"><strong class="text-[var(--text-primary)]">Deeper Revenue Insights:</strong> Trends by customer or product.</span></li>
+                    <li class="flex items-start gap-3"><i data-lucide="arrow-right-circle" class="w-5 h-5 text-[var(--ep-teal)] mt-1 flex-shrink-0"></i><span class="text-[var(--text-secondary)]"><strong class="text-[var(--text-primary)]">Liquidity & Runway Forecasting:</strong> Identify future capital needs.</span></li>
+                    <li class="flex items-start gap-3"><i data-lucide="arrow-right-circle" class="w-5 h-5 text-[var(--ep-teal)] mt-1 flex-shrink-0"></i><span class="text-[var(--text-secondary)]"><strong class="text-[var(--text-primary)]">Monthly Insights Email:</strong> Concise summary of key trends.</span></li>
+                </ul>
+                <p class="text-sm text-gray-500 mt-6 italic">Includes up to 3 hrs of customizations.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 8: Basic Dashboard Key Features (Re-inserted) -->
+<section id="key-features" class="section bg-[#f0f2f5]">
+    <div class="section-content">
+        <div class="text-center mb-16">
+            <h2 class="section-title">Basic Dashboard: Key Features</h2>
+        </div>
+        <div class="space-y-12">
+            <!-- Feature 1 -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+                <div class="text-left md:col-span-5">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-wrapper flex-shrink-0 w-12 h-12 !mb-0"><i data-lucide="trending-up" class="w-6 h-6"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg text-[var(--ep-navy)]">Runway</h4>
+                            <p class="text-[var(--text-secondary)] mt-1">Based on the historical net burn rate, the dashboard calculates your company’s runway, helping you understand how long your available capital will last at your current spending rate.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-2 border border-gray-200 shadow-sm md:col-span-7">
+                    <img src="https://i.postimg.cc/2ScbgSqS/image2.png" alt="Dashboard Key Metrics" class="w-full">
+                </div>
+            </div>
+            <!-- Feature 2 -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+                <div class="bg-white p-2 border border-gray-200 shadow-sm md:col-span-7 md:order-last">
+                    <img src="https://i.postimg.cc/fLXV378V/image7.png" alt="LTM Monthly Sales by Segment" class="w-full">
+                </div>
+                <div class="text-left md:col-span-5">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-wrapper flex-shrink-0 w-12 h-12 !mb-0"><i data-lucide="bar-chart-big" class="w-6 h-6"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg text-[var(--ep-navy)]">Revenue by Segments and Historical Trends</h4>
+                            <p class="text-[var(--text-secondary)] mt-1">Visualize revenue breakdowns by different segments of your business and track trends in those segments using absolute figures.</p></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Feature 3 -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+                <div class="text-left md:col-span-5">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-wrapper flex-shrink-0 w-12 h-12 !mb-0"><i data-lucide="percent" class="w-6 h-6"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg text-[var(--ep-navy)]">Revenue Growth by Segments and Historical Trends</h4>
+                            <p class="text-[var(--text-secondary)] mt-1">Visualize revenue growth percentages by different segments, to identify high-performing areas. View trends in your historical revenue to understand how your revenue has evolved over time.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-2 border border-gray-200 shadow-sm md:col-span-7">
+                    <img src="https://i.postimg.cc/L4tq2Tq7/image9.png" alt="LTM Monthly Sales Growth" class="w-full">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 10: Enhanced Dashboard Key Features (New) -->
+<section id="enhanced-key-features-1" class="section full-width-content bg-white">
+    <div class="section-content full-width">
+        <div class="grid grid-cols-1 md:grid-cols-7 gap-0 items-center w-full rounded-none shadow-none overflow-hidden min-h-[70vh]">
+            <div class="col-span-1 md:col-span-2 flex items-center h-full p-12 bg-gray-200">
+               <div>
+                    <h2 class="text-2xl font-black leading-tight text-black">Enhanced<br>Dashboard:<br>Key Features</h2>
+                    <div class="w-24 h-1 bg-[var(--ep-teal)] my-6"></div>
+                    <h3 class="section-title !text-black !font-black !text-3xl">Performance Analysis</h3>
+                    <p class="text-base text-gray-700 mt-4">Dive into a comparative financial performance analysis for all months available in your accounting system to track financial trends over time.</p>
+               </div>
+            </div>
+            <div class="col-span-1 md:col-span-5 bg-white p-12 flex items-center justify-center">
+                <div class="relative w-full max-w-3xl mx-auto">
+                    <img src="https://i.postimg.cc/htjh8RCW/image12.png" alt="Financial Performance Analysis" class="w-full h-auto relative z-10 shadow-md">
+                    <div class="absolute top-3 left-3 w-full h-full bg-gray-100 transform -translate-x-3 -translate-y-3 z-0 shadow-lg"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 11: Enhanced Dashboard Key Features (New) -->
+<section id="enhanced-key-features-2" class="section full-width-content bg-white">
+    <div class="section-content full-width">
+        <div class="grid grid-cols-1 md:grid-cols-7 gap-0 items-center w-full rounded-none shadow-none overflow-hidden min-h-[70vh]">
+            <div class="col-span-1 md:col-span-2 flex items-center h-full p-12 bg-gray-200">
+               <div>
+                    <h2 class="text-2xl font-black leading-tight text-black">Enhanced<br>Dashboard:<br>Key Features</h2>
+                    <div class="w-24 h-1 bg-[var(--ep-teal)] my-6"></div>
+                    <h3 class="section-title !text-black !font-black !text-3xl">Variance Analysis</h3>
+                    <p class="text-base text-gray-700 mt-4">Compare your actual performance with Pro Forma projections on a monthly and quarterly basis, helping you understand deviations and adjust strategies accordingly.</p>
+               </div>
+            </div>
+            <div class="col-span-1 md:col-span-5 bg-white p-12 flex items-center justify-center">
+                <div class="relative w-full max-w-3xl mx-auto">
+                    <img src="https://i.postimg.cc/XYp7GcJn/image21.png" alt="Detailed and Interactive Variance Analysis" class="w-full h-auto relative z-10 shadow-md">
+                    <div class="absolute top-3 left-3 w-full h-full bg-gray-100 transform -translate-x-3 -translate-y-3 z-0 shadow-lg"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 12: Enhanced Dashboard Key Features (New) -->
+<section id="enhanced-key-features-3" class="section full-width-content bg-white">
+    <div class="section-content full-width">
+        <div class="grid grid-cols-1 md:grid-cols-7 gap-0 items-center w-full rounded-none shadow-none overflow-hidden min-h-[70vh]">
+            <div class="col-span-1 md:col-span-2 flex items-center h-full p-12 bg-gray-200">
+               <div>
+                    <h2 class="text-2xl font-black leading-tight text-black">Enhanced<br>Dashboard:<br>Key Features</h2>
+                    <div class="w-24 h-1 bg-[var(--ep-teal)] my-6"></div>
+                    <h3 class="section-title !text-black !font-black !text-3xl">Profitability Insights</h3>
+                    <p class="text-base text-gray-700 mt-4">Track your Top 10 expenses by year-to-date and previous year comparisons, alongside moving trends in gross margin and net margin.</p>
+               </div>
+            </div>
+            <div class="col-span-1 md:col-span-5 bg-white p-12 flex items-center justify-center">
+                <div class="relative w-full max-w-3xl mx-auto">
+                    <img src="https://i.postimg.cc/ht649zzT/image23.png" alt="Profitability Insights" class="w-full h-auto relative z-10 shadow-md">
+                    <div class="absolute top-3 left-3 w-full h-full bg-gray-100 transform -translate-x-3 -translate-y-3 z-0 shadow-lg"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 13: Enhanced Dashboard Key Features (New) -->
+<section id="enhanced-key-features-4" class="section full-width-content bg-white">
+    <div class="section-content full-width">
+        <div class="grid grid-cols-1 md:grid-cols-7 gap-0 items-center w-full rounded-none shadow-none overflow-hidden min-h-[70vh]">
+            <div class="col-span-1 md:col-span-2 flex items-center h-full p-12 bg-gray-200">
+               <div>
+                    <h2 class="text-2xl font-black leading-tight text-black">Enhanced<br>Dashboard:<br>Key Features</h2>
+                    <div class="w-24 h-1 bg-[var(--ep-teal)] my-6"></div>
+                    <h3 class="section-title !text-black !font-black !text-3xl">Liquidity Insights</h3>
+                    <p class="text-base text-gray-700 mt-4">Track your liquidity position and analyze the cash drivers from operating, investing, and financing activities to understand short-term and long-term trends.</p>
+               </div>
+            </div>
+            <div class="col-span-1 md:col-span-5 bg-white p-12 flex items-center justify-center">
+                <div class="relative w-full max-w-3xl mx-auto">
+                    <img src="https://i.postimg.cc/7ZYXgb8H/Screenshot-2025-08-27-043129.png" alt="Liquidity Insights - Top Image" class="w-full h-auto relative z-10 shadow-md">
+                    <div class="absolute top-3 left-3 w-full h-full bg-gray-100 transform -translate-x-3 -translate-y-3 z-0 shadow-lg"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 14: Enhanced Dashboard Key Features (New) -->
+<section id="enhanced-key-features-5" class="section full-width-content bg-white">
+    <div class="section-content full-width">
+        <div class="grid grid-cols-1 md:grid-cols-7 gap-0 items-center w-full rounded-none shadow-none overflow-hidden min-h-[70vh]">
+            <div class="col-span-1 md:col-span-2 flex items-center h-full p-12 bg-gray-200">
+               <div>
+                    <h2 class="text-2xl font-black leading-tight text-black">Enhanced<br>Dashboard:<br>Key Features</h2>
+                    <div class="w-24 h-1 bg-[var(--ep-teal)] my-6"></div>
+                    <h3 class="section-title !text-black !font-black !text-3xl">Runway Forecasting</h3>
+                    <p class="text-base text-gray-700 mt-4">Track your projected net burn and runway duration based on historical and forecasted cash flows, helping you plan for sustainability and identify necessary capital requirements.</p>
+               </div>
+            </div>
+            <div class="col-span-1 md:col-span-5 bg-white p-12 flex items-center justify-center">
+                <div class="relative w-full max-w-3xl mx-auto">
+                    <img src="https://i.postimg.cc/fRGZVGpv/image32.png" alt="Runway Forecasting" class="w-full h-auto relative z-10 shadow-md">
+                    <div class="absolute top-3 left-3 w-full h-full bg-gray-100 transform -translate-x-3 -translate-y-3 z-0 shadow-lg"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 15: New Section - Insights Summary -->
+<section id="enhanced-key-features-6" class="section full-width-content bg-white">
+    <div class="section-content full-width">
+        <div class="grid grid-cols-1 md:grid-cols-7 gap-0 items-center w-full rounded-none shadow-none overflow-hidden min-h-[70vh]">
+            <div class="col-span-1 md:col-span-2 flex items-center h-full p-12 bg-gray-200">
+               <div>
+                    <h2 class="text-2xl font-black leading-tight text-black">Enhanced<br>Dashboard:<br>Key Features</h2>
+                    <div class="w-24 h-1 bg-[var(--ep-teal)] my-6"></div>
+                    <h3 class="section-title !text-black !font-black !text-3xl">Insights Summary</h3>
+                    <p class="text-base text-gray-700 mt-4">Receive a monthly insights summary via email, summarizing key metrics and performance trends.</p>
+               </div>
+            </div>
+            <div class="col-span-1 md:col-span-5 bg-white p-12 flex items-center justify-center">
+                <div class="relative w-full max-w-3xl mx-auto">
+                    <img src="https://i.postimg.cc/5tz4p4LG/image24.png" alt="Monthly insights summary with key metrics" class="w-full h-auto relative z-10 shadow-md">
+                    <div class="absolute top-3 left-3 w-full h-full bg-gray-100 transform -translate-x-3 -translate-y-3 z-0 shadow-lg"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Section 19: Cash Strategy Budget Intro -->
+<section id="cash-strategy-intro" class="section bg-[var(--ep-navy)] text-white flex items-center justify-center min-h-[70vh]">
+    <div class="section-content text-center">
+        <i data-lucide="dollar-sign" class="w-24 h-24 mx-auto mb-6 text-[var(--ep-teal)]"></i>
+        <h1 class="text-6xl md:text-8xl font-black mb-4">Cash Strategy Budget</h1>
+        <p class="text-xl md:text-2xl opacity-80">Master Your Liquidity</p>
+    </div>
+</section>
+
+<!-- Section 20: Cash Strategy Features -->
+<section id="cash-strategy-features" class="section bg-[#f0f2f5]">
+    <div class="section-content max-w-4xl mx-auto text-center">
+        <h2 class="section-title mb-6">Proactive Cash Management</h2>
+        <p class="section-subtitle mb-12 mx-auto">An intuitive tool to manage liquidity and optimize cash deployment, built for flexibility and collaboration. Move from reactive to strategic financial command.</p>
+         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+            <div class="flex items-start gap-4"><div class="icon-wrapper flex-shrink-0 !mb-0"><i data-lucide="clipboard-list" class="w-6 h-6"></i></div><div><h4 class="font-bold text-lg text-[var(--ep-navy)]">Expense & Inflow Forecasting</h4><p class="text-[var(--text-secondary)]">Granular, short-term analysis of all expenses and key inflows.</p></div></div>
+            <div class="flex items-start gap-4"><div class="icon-wrapper flex-shrink-0 !mb-0"><i data-lucide="git-fork" class="w-6 h-6"></i></div><div><h4 class="font-bold text-lg text-[var(--ep-navy)]">Scenario Planning</h4><p class="text-[var(--text-secondary)]">Prepare for Bear, Base, and Bull cases to manage uncertainty.</p></div></div>
+            <div class="flex items-start gap-4"><div class="icon-wrapper flex-shrink-0 !mb-0"><i data-lucide="area-chart" class="w-6 h-6"></i></div><div><h4 class="font-bold text-lg text-[var(--ep-navy)]">Summaries & Analysis</h4><p class="text-[var(--text-secondary)]">Weekly cash summary, Burn & Runway Analysis.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- Start of new sections: Cash Strategy Budget features -->
+<section id="cash-strategy-details-2" class="section bg-white">
+    <div class="section-content">
+        <div class="max-w-4xl mx-auto w-full text-center py-8 md:py-16">
+            <h2 class="section-title leading-tight mb-8">
+                Cash Strategy Budget: Key Features
+            </h2>
+            <div class="flex flex-col space-y-12 mt-12">
+                <!-- Feature 1: Inflows -->
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-12">
+                    <div class="w-full md:w-1/2 text-left">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[var(--ep-light-teal)] text-[var(--ep-teal)] flex-shrink-0">
+                                <i data-lucide="trending-up" class="h-6 w-6"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-xl font-bold text-[var(--ep-navy)]">Analysis and Forecasting of Key Inflows</h2>
+                                <p class="text-base text-[var(--text-secondary)] mt-2">Understand the timing and sources of key inflows to ensure you have a clear view of cash coming into the business.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 p-4 border-2 border-[var(--ep-teal)] shadow-lg flex items-center justify-center">
+                        <img src="https://i.postimg.cc/HndkVqJN/image18.png" alt="Inflows Analysis" class="w-full h-auto">
+                    </div>
+                </div>
+                <!-- Feature 2: Scenario Planning -->
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-12">
+                    <div class="w-full md:w-1/2 text-left">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[var(--ep-light-teal)] text-[var(--ep-teal)] flex-shrink-0">
+                                <i data-lucide="git-fork" class="h-6 w-6"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-xl font-bold text-[var(--ep-navy)]">Scenario Planning</h2>
+                                <p class="text-base text-[var(--text-secondary)] mt-2">Includes Bear, Base, and Bull scenario planning to prepare for key uncertainties in your business and ensure you're ready for a range of financial outcomes.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 p-4 border-2 border-[var(--ep-teal)] shadow-lg flex items-center justify-center">
+                        <img src="https://i.postimg.cc/xCytvmCd/Screenshot-2025-09-17-015433.png" alt="Scenario Planning" class="w-full h-auto">
+                    </div>
+                </div>
+                <!-- Feature 3: Expenses -->
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-12">
+                    <div class="w-full md:w-1/2 text-left">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[var(--ep-light-teal)] text-[var(--ep-teal)] flex-shrink-0">
+                                <i data-lucide="clipboard-list" class="h-6 w-6"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-xl font-bold text-[var(--ep-navy)]">Forecasting of Key Expenses</h2>
+                                <p class="text-base text-[var(--text-secondary)] mt-2">Analyze and forecast fixed, variable, and one-off expenses/vendor payments, ensuring all financial obligations are accounted for.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 p-4 border-2 border-[var(--ep-teal)] shadow-lg flex items-center justify-center">
+                        <img src="https://i.postimg.cc/wM2TJwLj/image19.png" alt="Expenses Forecasting" class="w-full h-auto">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="cash-strategy-details-3" class="section full-width-content bg-white">
+    <div class="section-content full-width">
+        <div class="grid grid-cols-1 md:grid-cols-7 gap-0 items-center w-full rounded-none shadow-none overflow-hidden min-h-[70vh]">
+            <div class="col-span-1 md:col-span-2 flex items-center h-full p-12 bg-gray-200">
+               <div>
+                    <h2 class="text-2xl font-black leading-tight text-black">Cash<br>Strategy<br>Budget:<br>Key Features</h2>
+                    <div class="w-24 h-1 bg-[var(--ep-teal)] my-6"></div>
+                    <p class="text-base text-gray-700 mt-4">Track your current cash position and see a clear six-month forecast to plan ahead with confidence.</p>
+               </div>
+            </div>
+            <div class="col-span-1 md:col-span-5 bg-white p-12 flex items-center justify-center">
+                <div class="relative w-full max-w-3xl mx-auto">
+                    <img src="https://i.postimg.cc/cHB6dxDj/Screenshot-2025-09-17-020526.png" alt="Runway Analysis Chart" class="w-full h-auto relative z-10 shadow-md">
+                    <div class="absolute top-3 left-3 w-full h-full bg-gray-100 transform -translate-x-3 -translate-y-3 z-0 shadow-lg"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End of new sections -->
+
+<!-- Section 21: Model Audit Intro -->
+<section id="model-audit-intro" class="section bg-[var(--ep-navy)] text-white flex items-center justify-center min-h-[70vh]">
+    <div class="section-content text-center">
+        <i data-lucide="shield-check" class="w-24 h-24 mx-auto mb-6 text-[var(--ep-teal)]"></i>
+        <h1 class="text-6xl md:text-8xl font-black mb-4">Model Audit</h1>
+        <p class="text-xl md:text-2xl opacity-80">Free Review of Your Existing Pro Forma</p>
+    </div>
+</section>
+
+<!-- Section 22: Model Audit Details -->
+<section id="model-audit-details" class="section bg-white">
+    <div class="section-content">
+        <div class="text-center mb-12">
+            <h2 class="section-title">A Thorough, Unbiased Review</h2>
+            <p class="section-subtitle mx-auto">Understand how we can be most helpful in your Pro Forma Build</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h3 class="text-2xl font-bold text-[var(--ep-navy)] mb-6">What The Audit Includes:</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3"><div class="icon-wrapper flex-shrink-0 w-10 h-10 !mb-0"><i data-lucide="file-text" class="w-5 h-5"></i></div><div><h4 class="font-bold text-[var(--ep-navy)]">Detailed Report</h4><p class="text-[var(--text-secondary)] text-sm">Analysis of your model on four crucial areas: forecast reliability, structure, clarity, and flexibility.</p></div></div>
+                    <div class="flex items-start gap-3"><div class="icon-wrapper flex-shrink-0 w-10 h-10 !mb-0"><i data-lucide="list-checks" class="w-5 h-5"></i></div><div><h4 class="font-bold text-[var(--ep-navy)]">Actionable Recommendations</h4><p class="text-[var(--text-secondary)] text-sm">A prioritized list of concrete steps to improve your model.</p></div></div>
+                    <div class="flex items-start gap-3"><div class="icon-wrapper flex-shrink-0 w-10 h-10 !mb-0"><i data-lucide="users" class="w-5 h-5"></i></div><div><h4 class="font-bold text-[var(--ep-navy)]">Expert Consultation</h4><p class="text-[var(--text-secondary)] text-sm">A 30-minute call with our team to review the findings and recommendations.</p></div></div>
+                </div>
+            </div>
+            <div class="custom-card p-8 bg-[#f0f2f5]">
+                <h3 class="text-2xl font-bold text-[var(--ep-navy)] mb-6 text-center">Our Process</h3>
+                <div class="relative">
+                     <div class="border-l-2 border-dashed border-[var(--ep-teal)] absolute h-full top-0 left-5"></div>
+                     <div class="space-y-8">
+                        <div class="flex gap-4 items-center"><div class="bg-[var(--ep-teal)] text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg z-10 flex-shrink-0">1</div><p class="text-[var(--text-secondary)]">A 30-minute call to understand your specific needs.</p></div>
+                        <div class="flex gap-4 items-center"><div class="bg-[var(--ep-teal)] text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg z-10 flex-shrink-0">2</div><p class="text-[var(--text-secondary)]">Our team conducts the comprehensive audit.</p></div>
+                        <div class="flex gap-4 items-center"><div class="bg-[var(--ep-teal)] text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg z-10 flex-shrink-0">3</div><p class="text-[var(--text-secondary)]">A 30-minute review call to deliver the results.</p></div>
+                     </div>
+                </div>
+                <p class="text-center font-bold text-sm text-[var(--ep-teal)] mt-8">Turnaround Time: 1 Week</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 23: Consolidated Pricing -->
+<section id="pricing" class="section bg-[#f0f2f5]">
+    <div class="section-content">
+        <div class="text-center mb-12">
+            <h2 class="section-title">Pricing</h2>
+            <p class="section-subtitle mx-auto">Choose the level of support that's right for your stage of growth.</p>
+        </div>
+        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden border border-[var(--border-color)]">
+            <table id="pricing-table" class="w-full text-left">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="p-6 text-sm font-semibold text-[var(--ep-navy)] uppercase tracking-wider">Product</th>
+                        <th class="p-6 text-sm font-semibold text-[var(--ep-navy)] uppercase tracking-wider">Key Focus</th>
+                        <th class="p-6 text-sm font-semibold text-[var(--ep-navy)] uppercase tracking-wider text-right">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-[var(--border-color)]">
+                        <td data-label="Product" class="p-6 align-top font-bold text-[var(--ep-navy)]">Pro Forma</td>
+                        <td data-label="Key Focus" class="p-6 text-[var(--text-secondary)]">Complete, investor-ready financial model for fundraises & long-term strategy.</td>
+                         <td data-label="Price" class="p-6 text-right align-top">
+                            <div class="text-xl font-bold text-[var(--ep-teal)] whitespace-nowrap">from $1325/month</div>
+                            <div class="text-xs text-gray-500 mt-1 italic whitespace-nowrap">Valuation Services available as an add-on.</div>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-[var(--border-color)]">
+                        <td data-label="Product" class="p-6 align-top font-bold text-[var(--ep-navy)]">Enhanced Dashboard</td>
+                        <td data-label="Key Focus" class="p-6 text-[var(--text-secondary)]">Advanced insights with variance analysis, revenue trends, and runway forecasting.</td>
+                        <td data-label="Price" class="p-6 text-right align-top">
+                            <div class="text-xl font-bold text-[var(--ep-teal)] whitespace-nowrap">$750/month</div>
+                            <div class="text-xs text-gray-500 mt-1 italic whitespace-nowrap">Or $250/month as an add-on to the CFO Plan.</div>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-[var(--border-color)]">
+                        <td data-label="Product" class="p-6 align-top font-bold text-[var(--ep-navy)]">Basic Dashboard</td>
+                        <td data-label="Key Focus" class="p-6 text-[var(--text-secondary)]">Monthly snapshot of profitability, burn, and liquidity.</td>
+                        <td data-label="Price" class="p-6 text-xl font-bold text-[var(--ep-teal)] text-right whitespace-nowrap">$500/month</td>
+                    </tr>
+                    <tr class="border-b border-[var(--border-color)]">
+                        <td data-label="Product" class="p-6 align-top font-bold text-[var(--ep-navy)]">Cash Strategy Budget</td>
+                        <td data-label="Key Focus" class="p-6 text-[var(--text-secondary)]">Optimize liquidity and cash deployment with scenario planning.</td>
+                        <td data-label="Price" class="p-6 text-xl font-bold text-[var(--ep-teal)] text-right whitespace-nowrap">$500/month</td>
+                    </tr>
+                    <tr class="border-b border-[var(--border-color)]">
+                        <td data-label="Product" class="p-6 align-top font-bold text-[var(--ep-navy)]">One-Time Model Builds</td>
+                        <td data-label="Key Focus" class="p-6 text-[var(--text-secondary)]">A complete financial model delivered as a one-time project.</td>
+                        <td data-label="Price" class="p-6 text-xl font-bold text-[var(--ep-teal)] text-right whitespace-nowrap">Custom Quote</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Product" class="p-6 align-top font-bold text-[var(--ep-navy)]">Retainer Services</td>
+                        <td data-label="Key Focus" class="p-6 text-[var(--text-secondary)]">Ongoing, flexible FP&A support on an hourly basis.</td>
+                        <td data-label="Price" class="p-6 text-xl font-bold text-[var(--ep-teal)] text-right whitespace-nowrap">$37.5/hour</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- Section 24: The Enduring Planet Difference -->
+<section id="difference" class="section bg-white">
+    <div class="section-content">
+        <div class="text-center mb-12">
+            <h2 class="section-title">The Enduring Planet Difference</h2>
+            <p class="section-subtitle mx-auto">We’re not just vendors; we are your embedded financial partners, dedicated to fueling the growth of world-changing climate ventures. Our model is designed for continuous value, ensuring your financial strategy is as resilient and impactful as the solutions you're building.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div class="custom-card text-center"><div class="icon-wrapper mx-auto"><i data-lucide="piggy-bank"></i></div><h3 class="text-xl font-bold mb-2 text-[var(--ep-navy)]">No Large Up-front Fees</h3><p class="text-[var(--text-secondary)]">Unlike the typical $8k-$10k consultant fee, we get you started without the heavy initial cost, preserving your cash.</p></div>
+            <div class="custom-card text-center"><div class="icon-wrapper mx-auto"><i data-lucide="calendar-clock"></i></div><h3 class="text-xl font-bold mb-2 text-[var(--ep-navy)]">Amortized Development</h3><p class="text-[var(--text-secondary)]">We spread the cost of the initial model build over an implied 12-month period, making best-in-class FP&A accessible.</p></div>
+            <div class="custom-card text-center"><div class="icon-wrapper mx-auto"><i data-lucide="users"></i></div><h3 class="text-xl font-bold mb-2 text-[var(--ep-navy)]">All-Inclusive Monthly Support</h3><p class="text-[var(--text-secondary)]">Your single monthly fee covers the build, ongoing updates, regular meetings, and hands-on support.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 25: Testimonials -->
+<section id="testimonials" class="section bg-[#f0f2f5]">
+    <div class="section-content">
+        <div class="text-center mb-12">
+            <h2 class="section-title">Don't just take our word for it..</h2>
+            <p class="section-subtitle mx-auto">Hear directly from the climate leaders we partner with.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="custom-card md:col-span-2 bg-[var(--ep-navy)] text-white">
+                <blockquote class="text-lg italic">"Enduring Planet has a great reputation in start up support for advanced financial modeling, and strategic introductions to potential investors, helping us prepare for scale and align our fundraising with key growth milestones. Enduring Planet has been highly responsive and deeply capable, delivering an incredible pro forma that gives us the clarity and confidence to make smart growth decisions. Dimitry has been a great partner in shaping our investor strategy and making valuable introductions to potential investors. Their support has been instrumental in helping Windlift reach the next level of financial readiness and operational planning."</blockquote>
+                <cite class="mt-4 block font-bold text-[var(--ep-teal)] not-italic">Laura Kottke, CFO, Windlift</cite>
+            </div>
+            <div class="custom-card md:col-span-2">
+                <blockquote class="text-lg italic text-[var(--text-secondary)]">"We chose to work with Enduring Planet because of their unique focus on climate tech companies and their deep understanding of the challenges in this space. Beyond their FP&A expertise, they also brought valuable connections to climate-focused venture investors, which aligned with our growth strategy. Their flexible engagement model and fair pricing made it easy to get the right level of support at the right time. Our experience with Enduring Planet has been excellent. They’re responsive, easy to schedule with, and the financial model they built is clear, practical, and easy to work with. They consistently answer our questions, proactively seek feedback, and adapt quickly when changes are needed. I also appreciate their patience and understanding with my busy schedule and the inevitable last-minute requests. We look forward to continuing to work with them for the long term."</blockquote>
+                <cite class="mt-4 block font-bold text-[var(--ep-navy)] not-italic">Daniel Wojno, Co-Founder and COO, Loa Carbon</cite>
+            </div>
+            <div class="custom-card md:col-span-2 bg-[var(--ep-navy)] text-white">
+                <blockquote class="text-lg italic">"Enduring Planet has an excellent understanding of the climate tech space, as well as a reputation with climate tech investors. They also deeply understand the needs of early stage start ups from an operational perspective. They worked with us on our pro-forma for our recent equity raise and they model was just what we and (and our investors) needed to understand the fundamentals of our business. I also find their monthly KPI dashboard extremely helpful as well in terms of gleaning insights on our financial performance."</blockquote>
+                <cite class="mt-4 block font-bold text-[var(--ep-teal)] not-italic">Jon Schwartz, Head of Finance & Biz Ops, Elephant Energy</cite>
+            </div>
+            <div class="custom-card md:col-span-2">
+                <blockquote class="text-lg italic text-[var(--text-secondary)]">"My experience with Enduring Planet has been excellent. They’ve consistently met my needs as they’ve evolved, showing remarkable flexibility in building additional features into our reports, creating KPI dashboards, updating our model, and making modifications — all without nickel-and-diming us with extra hourly charges. They genuinely care about our business, often asking thoughtful questions about its health and offering insights from a finance perspective, including pointing out red or yellow flags and suggesting solutions. This combination of technical expertise, flexibility, and genuine interest has made them an invaluable partner. They’ve given us the confidence to make informed decisions and communicate our financial position clearly to both our team and investors. I would highly recommend them to any early-stage startup looking for a finance partner who truly treats their customers with care and respect."</blockquote>
+                <cite class="mt-4 block font-bold text-[var(--ep-navy)] not-italic">Jesse Hynes, COO & CFO, Climatebase</cite>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 26: Contact -->
+<section id="contact" class="section bg-white">
+    <div class="section-content text-center">
+         <div class="mb-6">
+            <img src="https://enduringplanet.com/_next/static/images/logo-b1431b87aad010f8a474bf5a54a49e5c.svg" alt="Enduring Planet Logo" class="mx-auto h-16 w-auto">
+        </div>
+        <h2 class="section-title mb-4">Ready to Build a More<br>Enduring Business?</h2>
+        <p class="text-xl text-gray-600 mb-10">Let's discuss how our FP&A expertise can support your mission.</p>
+        <a href="mailto:contact@enduringplanet.com" class="inline-block bg-[var(--ep-teal)] text-white font-bold py-4 px-8 rounded-full text-lg hover:opacity-90 transition-opacity">
+            contact@enduringplanet.com
+        </a>
+    </div>
+</section>
+
+
+<script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Chart.js Configuration - Note: Charts have been removed but the script is kept in case they are re-added.
+    // If you are sure you won't use charts, you can remove the Chart.js script tag from the <head> and this script block.
+</script>
+
+</body>
+</html>
+
+
+
+
+
